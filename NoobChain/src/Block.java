@@ -19,7 +19,7 @@ public class Block {
     public String calculateHash() {
 
         // Hash Input String:
-        String input = previousHash + Long.toString(timeStamp) + data;
+        String input = previousHash + Long.toString(timeStamp) + data + Integer.toString(nonce);
 
         // Calculate the hash:
         String calculatedHash = BlockIDUtil.applySHA256(input);
@@ -34,7 +34,6 @@ public class Block {
         while (!hash.substring(0, difficulty).equals(target)) {
             nonce ++;
             hash = calculateHash();
-            System.out.println("Current hash: " + hash);
         }
         System.out.println("Block mined !!!: " + hash);
     }
