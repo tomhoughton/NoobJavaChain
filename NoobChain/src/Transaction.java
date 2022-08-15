@@ -9,6 +9,7 @@
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 public class Transaction {
 
