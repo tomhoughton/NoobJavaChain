@@ -1,4 +1,5 @@
-import java.security.MessageDigest;
+import java.security.*;
+import java.util.Base64;
 
 public class BlockIDUtil {
     // Simply applies the SHA256 hash to a string and returns.
@@ -22,5 +23,42 @@ public class BlockIDUtil {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    // Apply ECDSA Signature and return the result ( as bytes)
+    public static byte[] applyECDSASig(PrivateKey privateKey, String input) {
+        Signature dsa;
+        byte[] output = new byte[0];
+
+        try {
+            dsa = Signature.getInstance("ECDSA", "BC");
+            dsa.initSign(privateKey);
+
+            byte[] strByte = input.getBytes();
+            dsa.update(strByte);
+
+            byte[] realSig = dsa.sign();
+            output = realSig;
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return output;
+    }
+
+    // Verify a String Signature:
+    public static boolean verifyECDSASig(PublicKey publicKey, String data, byte[] signature) {
+        try {
+            Signature ecdsaVerify = Signature.getInstance("ECDSA", "BC");
+            ecdsaVerify.initVerify(publicKey);
+            ecdsaVerify.update(data.getBytes());
+            return ecdsaVerify.verify(signature);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String getStringFromKey(Key key) {
+        return Base64.getEncoder().encodeToString(key.getEncoded());
     }
 }
